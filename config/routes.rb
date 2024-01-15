@@ -14,5 +14,6 @@ Rails.application.routes.draw do
   get '/user_signed_in', to: 'current_user#user_signed_in'
 
   resources :announcements, only: %i[index create]
+  resources :attendances, only: %i[index show create]
 
 end

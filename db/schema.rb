@@ -32,13 +32,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_11_071152) do
   end
 
   create_table "attendances", force: :cascade do |t|
-    t.bigint "users_id", null: false
-    t.bigint "attendance_types_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "attendance_type_id", null: false
     t.datetime "date", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["attendance_types_id"], name: "index_attendances_on_attendance_types_id"
-    t.index ["users_id"], name: "index_attendances_on_users_id"
+    t.index ["attendance_type_id"], name: "index_attendances_on_attendance_type_id"
+    t.index ["date", "user_id", "attendance_type_id"], name: "uniq_attendance_per_user_per_day", unique: true
+    t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "departments", force: :cascade do |t|
@@ -74,11 +75,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_11_071152) do
     t.index ["department_id"], name: "index_users_on_department_id"
     t.index ["designation_id"], name: "index_users_on_designation_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["employee_id"], name: "index_users_on_employee_id", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "announcements", "users"
-  add_foreign_key "attendances", "attendance_types", column: "attendance_types_id"
-  add_foreign_key "attendances", "users", column: "users_id"
+  add_foreign_key "attendances", "attendance_types"
+  add_foreign_key "attendances", "users"
 end
